@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,16 +21,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)kj_rne(i9ts1m4=lvg!!$q@(yu-j4qve_&-w!&*!t7plh$m_t'
+SECRET_KEY = 'django-insecure-r&4&06*qp0*c$t)4#6_tn&4h28%7^1#g9pj)(gbp97^a6m!s6i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 CORS_ALLOW_ALL_ORIGINS = True
-
-
+"http://127.0.0.1:8003",
+"http://localhost:8003",
+"http://localhost:3000",
+"http://127.0.0.1:5500",
+"http://127.0.0.1:3380",
+"http://172.17.100.14:3380",
+"http://172.17.100.14:8003",
+"http://0.0.0.0:8003",
+# CORS settings
+CORS_ALLOW_METHODS = ['DELETE', 'GET', 'PATCH', 'POST', 'PUT']
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,20 +48,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api', 
+    'api',
     'corsheaders',
-    
+    'django_filters',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -80,21 +89,22 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+#DATABASES = {
+    #'default': {
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+   # }
+#}
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Use MySQL engine
-        'NAME': 'coral2_db1',                 # Your database name
+        'NAME': 'coral_db1',                 # Your database name
         'USER': 'coral2',                     # Your MySQL username
         'PASSWORD': '123456',                  # Your MySQL password
         'HOST': 'localhost',                   # MySQL server host (localhost if on the same machine)
-        'PORT': '3321',                        # MySQL default port
+        'PORT': '3306',                        # MySQL default port
     }
 }
 
@@ -135,7 +145,25 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+# Media settings
+
+MEDIA_URL = '/coral2/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 16
+}
+# settings.py
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
